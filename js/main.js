@@ -10,7 +10,7 @@ const pictureElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const getRandomInt = (min, max) => {
-  return Math.floor(Math.random() * (max - min)) + min;
+  return Math.round(Math.random() * (max - min)) + min;
 };
 
 const getRandomArrElement = (arr) => {
