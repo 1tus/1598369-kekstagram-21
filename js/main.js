@@ -14,7 +14,7 @@ const getRandomInt = (min, max) => {
 };
 
 const getRandomArrElement = (arr) => {
-  return arr[getRandomInt(0, arr.length)];
+  return arr[getRandomInt(0, arr.length - 1)];
 };
 
 const getNewComment = () => {
