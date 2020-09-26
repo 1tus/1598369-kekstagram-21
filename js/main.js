@@ -57,9 +57,47 @@ const renderPicture = (picture) => {
   return newPictureElement;
 };
 
-const fragment = document.createDocumentFragment();
+const picturesFragment = document.createDocumentFragment();
 
 for (let i = 0; i < pictureObjects.length; i++) {
-  fragment.appendChild(renderPicture(pictureObjects[i]));
+  picturesFragment.appendChild(renderPicture(pictureObjects[i]));
 }
-pictureElement.appendChild(fragment);
+pictureElement.appendChild(picturesFragment);
+
+// больше деталей (часть 2)
+
+document.querySelector('.big-picture').classList.remove('hidden');
+const bigPictureImgContainer = document.querySelector('.big-picture__img');
+const socialComments = document.querySelector('.social__comments');
+const socialComment = socialComments.children;
+const commentTemplate = socialComments.querySelector('.social__comment');
+
+for (let i = socialComment.length - 1; i >= 0; i--) {
+  socialComment[i].remove();
+}
+
+bigPictureImgContainer.querySelector('img').src = pictureObjects[0].url;
+document.querySelector('.likes-count').textContent = pictureObjects[0].likes;
+document.querySelector('.comments-count').textContent = pictureObjects[0].comments.length;
+
+const renderComment = (comment) => {
+  const newCommentElement = commentTemplate.cloneNode(true);
+
+  newCommentElement.querySelector('img').src = comment.avatar;
+  newCommentElement.querySelector('img').alt = comment.name;
+  newCommentElement.querySelector('.social__text').textContent = comment.message;
+
+  return newCommentElement;
+};
+
+const commentsFragment = document.createDocumentFragment();
+for (let i = 0; i < pictureObjects[0].comments.length; i++) {
+  commentsFragment.appendChild(renderComment(pictureObjects[0].comments[i]));
+}
+socialComments.appendChild(commentsFragment);
+
+document.querySelector('.social__caption').textContent = pictureObjects[0].description;
+
+document.querySelector('.social__comment-count').classList.add('hidden');
+document.querySelector('.comments-loader').classList.add('hidden');
+document.querySelector('body').classList.add('modal-open');
