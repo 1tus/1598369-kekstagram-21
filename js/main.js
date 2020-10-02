@@ -215,7 +215,7 @@ const onEffectPinUp = () => {
 };
 
 const resetEditForm = () => {
-  document.querySelector('#upload-file').value = '';
+  inputFile.value = '';
   imgPreview.className = '';
   imgPreview.style.filter = '';
   ZOOM.current = ZOOM.max;
