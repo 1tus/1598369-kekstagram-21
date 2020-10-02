@@ -147,6 +147,7 @@ const ZOOM = {
 
 const uploadFileField = document.querySelector('.img-upload__start');
 const imgFormPreview = document.querySelector('.img-upload__overlay');
+const inputFile = uploadFileField.querySelector('.img-upload__input');
 const imgPreview = document.querySelector('.img-upload__preview > img');
 const effectPinValue = imgFormPreview.querySelector('.effect-level__value');
 const closeEditFormBtn = imgFormPreview.querySelector('.img-upload__cancel');
@@ -215,6 +216,10 @@ const onEffectPinUp = () => {
 
 const resetEditForm = () => {
   document.querySelector('#upload-file').value = '';
+  imgPreview.className = '';
+  imgPreview.style.filter = '';
+  ZOOM.current = ZOOM.max;
+  zoomDownBtn.disabled = false;
 };
 const onOpenEditForm = () => {
   openEditForm();
@@ -226,8 +231,7 @@ const openEditForm = () => {
   document.addEventListener('keydown', onCloseEditFormEsc);
   effectsBar.addEventListener('input', setTargetEffect);
   inputHashtags.addEventListener('input', getHastagsValidation);
-  ZOOM.current = ZOOM.max;
-  zoomDownBtn.disabled = false;
+  imgPreview.src = URL.createObjectURL(inputFile.files[0]);
   setZoomStyle(ZOOM.current);
   zoomDownBtn.addEventListener('click', onZoomDownClick);
   zoomUpBtn.addEventListener('click', onZoomUpClick);
@@ -277,7 +281,7 @@ const getHastagsValidation = () => {
   };
 
   if (hashtags.length > 5 && hashtags[0] !== '') {
-    inputHashtags.setCustomValidity('Максимольно допустимо 5 хэштегов');
+    inputHashtags.setCustomValidity('Максимально допустимо 5 хэштегов');
   } else if (!hashtags.every(testPattern) && hashtags[0] !== '') {
     inputHashtags.setCustomValidity('Недопустимый формат хэштега');
   } else if (checkMacthingHashtags() && hashtags[0] !== '') {
