@@ -256,7 +256,7 @@ const closeEditForm = () => {
 };
 
 const onCloseEditFormEsc = (evt) => {
-  if (evt.keyCode === 27 && document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
+  if (evt.key === 'Escape' && document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
     closeEditForm();
   }
 };
