@@ -54,7 +54,6 @@
   for (let i = 0; i < pictures.length; i++) {
     getFullPicture(pictures[i], window.pictureObjects[i]);
   }
-
   const closeFullPicture = () => {
     bigPictureContainer.classList.add('hidden');
     body.classList.remove('modal-open');
