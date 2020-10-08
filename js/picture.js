@@ -40,16 +40,16 @@
       moreCommentsBtn.classList.add(`hidden`);
     }
     moreCommentsBtn.addEventListener(`click`, () => {
-      if (j + 5 >= socialCommentsList.length) {
+      if (j + SOCIAL_COMMENTS_BY_CLICK >= socialCommentsList.length) {
         j = socialCommentsList.length - 5;
         moreCommentsBtn.classList.add(`hidden`);
       }
-      commentsCount.textContent = `${j + 5} из ${picturesObject.comments.length} комментариев`;
-      if (socialCommentsList.length > 5) {
-        for (let i = j; i < j + 5; i++) {
+      commentsCount.textContent = `${j + SOCIAL_COMMENTS_BY_CLICK} из ${picturesObject.comments.length} комментариев`;
+      if (socialCommentsList.length > SOCIAL_COMMENTS_BY_CLICK) {
+        for (let i = j; i < j + SOCIAL_COMMENTS_BY_CLICK; i++) {
           socialCommentsList[i].classList.remove(`visually-hidden`);
         }
-        j += 5;
+        j += SOCIAL_COMMENTS_BY_CLICK;
       }
     });
   };
