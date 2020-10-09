@@ -41,7 +41,7 @@
     }
     moreCommentsBtn.addEventListener(`click`, () => {
       if (j + SOCIAL_COMMENTS_BY_CLICK >= socialCommentsList.length) {
-        j = socialCommentsList.length - 5;
+        j = socialCommentsList.length - SOCIAL_COMMENTS_BY_CLICK;
         moreCommentsBtn.classList.add(`hidden`);
       }
       commentsCount.textContent = `${j + SOCIAL_COMMENTS_BY_CLICK} из ${picturesObject.comments.length} комментариев`;
