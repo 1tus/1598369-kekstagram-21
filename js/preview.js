@@ -6,7 +6,7 @@
     none: {
       min: 0,
       max: 0,
-      getFilterStyle: () => ''
+      getFilterStyle: () => ``
     },
     chrome: {
       min: 0,
@@ -42,21 +42,21 @@
     getZoomStyle: (size) => `transform: scale(${size / 100})`
   };
 
-  const uploadFileField = document.querySelector('.img-upload__start');
-  const inputFile = uploadFileField.querySelector('.img-upload__input');
-  const imgFormPreview = document.querySelector('.img-upload__overlay');
-  const imgPreview = imgFormPreview.querySelector('.img-upload__preview > img');
-  const closeEditFormBtn = imgFormPreview.querySelector('.img-upload__cancel');
-  const inputHashtags = imgFormPreview.querySelector('.text__hashtags');
-  const inputDescription = imgFormPreview.querySelector('.text__description');
-  const effectsBar = imgFormPreview.querySelector('.img-upload__effects');
-  const zoomDownBtn = imgFormPreview.querySelector('.scale__control--smaller');
-  const zoomUpBtn = imgFormPreview.querySelector('.scale__control--bigger');
-  const selectedZoom = imgFormPreview.querySelector('.scale__control--value');
-  const effectField = document.querySelector('.img-upload__effect-level');
-  const effectPin = effectField.querySelector('.effect-level__pin');
-  const effectPinValue = effectField.querySelector('.effect-level__value');
-  const effectLevelDepth = effectField.querySelector('.effect-level__depth');
+  const uploadFileField = document.querySelector(`.img-upload__start`);
+  const inputFile = uploadFileField.querySelector(`.img-upload__input`);
+  const imgFormPreview = document.querySelector(`.img-upload__overlay`);
+  const imgPreview = imgFormPreview.querySelector(`.img-upload__preview > img`);
+  const closeEditFormBtn = imgFormPreview.querySelector(`.img-upload__cancel`);
+  const inputHashtags = imgFormPreview.querySelector(`.text__hashtags`);
+  const inputDescription = imgFormPreview.querySelector(`.text__description`);
+  const effectsBar = imgFormPreview.querySelector(`.img-upload__effects`);
+  const zoomDownBtn = imgFormPreview.querySelector(`.scale__control--smaller`);
+  const zoomUpBtn = imgFormPreview.querySelector(`.scale__control--bigger`);
+  const selectedZoom = imgFormPreview.querySelector(`.scale__control--value`);
+  const effectField = document.querySelector(`.img-upload__effect-level`);
+  const effectPin = effectField.querySelector(`.effect-level__pin`);
+  const effectPinValue = effectField.querySelector(`.effect-level__value`);
+  const effectLevelDepth = effectField.querySelector(`.effect-level__depth`);
 
   const setZoomStyle = (size) => {
     selectedZoom.value = `${size}%`;
@@ -105,15 +105,15 @@
   const setTargetEffect = (evt) => {
     setFilterClass(evt.target.value);
     currentEffect = evt.target.value;
-    effectPin.style.left = '100%';
-    effectLevelDepth.style.width = '100%';
-    if (imgPreview.classList.contains('effects__preview--none')) {
-      effectField.style.display = 'none';
+    effectPin.style.left = `100%`;
+    effectLevelDepth.style.width = `100%`;
+    if (imgPreview.classList.contains(`effects__preview--none`)) {
+      effectField.style.display = `none`;
     } else {
-      effectField.style.display = 'block';
+      effectField.style.display = `block`;
     }
     imgPreview.style.filter = FILTER_EFFECTS[currentEffect].getFilterStyle(FILTER_EFFECTS[currentEffect].max);
-    effectPin.addEventListener('mouseup', onEffectPinUp);
+    effectPin.addEventListener(`mouseup`, onEffectPinUp);
     return currentEffect;
   };
   const onEffectPinUp = () => {
@@ -121,9 +121,9 @@
   };
 
   const resetEditForm = () => {
-    inputFile.value = '';
-    imgPreview.className = '';
-    imgPreview.style.filter = '';
+    inputFile.value = ``;
+    imgPreview.className = ``;
+    imgPreview.style.filter = ``;
     ZOOM.current = ZOOM.max;
     zoomDownBtn.disabled = false;
   };
@@ -131,41 +131,41 @@
     openEditForm();
   };
   const openEditForm = () => {
-    imgFormPreview.classList.remove('hidden');
-    document.querySelector('body').classList.add('modal-open');
-    closeEditFormBtn.addEventListener('click', onCloseEditForm);
-    document.addEventListener('keydown', onCloseEditFormEsc);
-    effectsBar.addEventListener('input', setTargetEffect);
-    inputHashtags.addEventListener('input', window.validation.getHastagsValidation);
-    inputDescription.addEventListener('input', window.validation.getCommentValidation);
+    imgFormPreview.classList.remove(`hidden`);
+    document.querySelector(`body`).classList.add(`modal-open`);
+    closeEditFormBtn.addEventListener(`click`, onCloseEditForm);
+    document.addEventListener(`keydown`, onCloseEditFormEsc);
+    effectsBar.addEventListener(`input`, setTargetEffect);
+    inputHashtags.addEventListener(`input`, window.validation.getHastagsValidation);
+    inputDescription.addEventListener(`input`, window.validation.getCommentValidation);
     imgPreview.src = URL.createObjectURL(inputFile.files[0]);
     setZoomStyle(ZOOM.current);
-    effectField.style.display = 'none';
-    zoomDownBtn.addEventListener('click', onZoomDownClick);
-    zoomUpBtn.addEventListener('click', onZoomUpClick);
+    effectField.style.display = `none`;
+    zoomDownBtn.addEventListener(`click`, onZoomDownClick);
+    zoomUpBtn.addEventListener(`click`, onZoomUpClick);
   };
 
-  uploadFileField.addEventListener('change', onOpenEditForm);
+  uploadFileField.addEventListener(`change`, onOpenEditForm);
 
   const onCloseEditForm = () => {
     closeEditForm();
   };
   const closeEditForm = () => {
-    imgFormPreview.classList.add('hidden');
-    document.querySelector('body').classList.remove('modal-open');
+    imgFormPreview.classList.add(`hidden`);
+    document.querySelector(`body`).classList.remove(`modal-open`);
     resetEditForm();
-    closeEditFormBtn.removeEventListener('click', onCloseEditForm);
-    document.removeEventListener('keydown', onCloseEditFormEsc);
-    effectsBar.removeEventListener('input', setTargetEffect);
-    effectPin.removeEventListener('mouseup', onEffectPinUp);
-    inputHashtags.removeEventListener('input', window.validation.getHastagsValidation);
-    inputDescription.removeEventListener('input', window.validation.getCommentValidation);
-    zoomDownBtn.removeEventListener('click', onZoomDownClick);
-    zoomUpBtn.removeEventListener('click', onZoomUpClick);
+    closeEditFormBtn.removeEventListener(`click`, onCloseEditForm);
+    document.removeEventListener(`keydown`, onCloseEditFormEsc);
+    effectsBar.removeEventListener(`input`, setTargetEffect);
+    effectPin.removeEventListener(`mouseup`, onEffectPinUp);
+    inputHashtags.removeEventListener(`input`, window.validation.getHastagsValidation);
+    inputDescription.removeEventListener(`input`, window.validation.getCommentValidation);
+    zoomDownBtn.removeEventListener(`click`, onZoomDownClick);
+    zoomUpBtn.removeEventListener(`click`, onZoomUpClick);
   };
 
   const onCloseEditFormEsc = (evt) => {
-    if (evt.key === 'Escape' && document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
+    if (evt.key === `Escape` && document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
       closeEditForm();
     }
   };
