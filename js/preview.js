@@ -44,12 +44,14 @@
 
   const uploadFileField = document.querySelector(`.img-upload__start`);
   const inputFile = uploadFileField.querySelector(`.img-upload__input`);
-  const imgFormPreview = document.querySelector(`.img-upload__overlay`);
+  const imgForm = document.querySelector(`.img-upload__form`);
+  const imgFormPreview = imgForm.querySelector(`.img-upload__overlay`);
   const imgPreview = imgFormPreview.querySelector(`.img-upload__preview > img`);
   const closeEditFormBtn = imgFormPreview.querySelector(`.img-upload__cancel`);
   const inputHashtags = imgFormPreview.querySelector(`.text__hashtags`);
   const inputDescription = imgFormPreview.querySelector(`.text__description`);
   const effectsBar = imgFormPreview.querySelector(`.img-upload__effects`);
+  const effectInputNone = effectsBar.querySelector(`#effect-none`);
   const zoomDownBtn = imgFormPreview.querySelector(`.scale__control--smaller`);
   const zoomUpBtn = imgFormPreview.querySelector(`.scale__control--bigger`);
   const selectedZoom = imgFormPreview.querySelector(`.scale__control--value`);
@@ -109,8 +111,10 @@
     effectLevelDepth.style.width = `100%`;
     if (imgPreview.classList.contains(`effects__preview--none`)) {
       effectField.style.display = `none`;
+      effectPinValue.value = ``;
     } else {
       effectField.style.display = `block`;
+      effectPinValue.value = `100`;
     }
     imgPreview.style.filter = FILTER_EFFECTS[currentEffect].getFilterStyle(FILTER_EFFECTS[currentEffect].max);
     effectPin.addEventListener(`mouseup`, onEffectPinUp);
@@ -124,6 +128,10 @@
     inputFile.value = ``;
     imgPreview.className = ``;
     imgPreview.style.filter = ``;
+    inputHashtags.value = ``;
+    inputDescription.value = ``;
+    effectInputNone.checked = `true`;
+    effectPinValue.value = ``;
     ZOOM.current = ZOOM.max;
     zoomDownBtn.disabled = false;
   };
@@ -143,14 +151,15 @@
     effectField.style.display = `none`;
     zoomDownBtn.addEventListener(`click`, onZoomDownClick);
     zoomUpBtn.addEventListener(`click`, onZoomUpClick);
+    imgForm.addEventListener(`submit`, window.submitHandler);
   };
 
   uploadFileField.addEventListener(`change`, onOpenEditForm);
 
   const onCloseEditForm = () => {
-    closeEditForm();
+    window.closeEditForm();
   };
-  const closeEditForm = () => {
+  window.closeEditForm = () => {
     imgFormPreview.classList.add(`hidden`);
     document.querySelector(`body`).classList.remove(`modal-open`);
     resetEditForm();
@@ -162,12 +171,12 @@
     inputDescription.removeEventListener(`input`, window.validation.getCommentValidation);
     zoomDownBtn.removeEventListener(`click`, onZoomDownClick);
     zoomUpBtn.removeEventListener(`click`, onZoomUpClick);
+    imgForm.removeEventListener(`submit`, window.submitHandler);
   };
 
   const onCloseEditFormEsc = (evt) => {
     if (evt.key === `Escape` && document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
-      closeEditForm();
+      window.closeEditForm();
     }
   };
-
 })();
