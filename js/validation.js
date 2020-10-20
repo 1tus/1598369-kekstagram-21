@@ -11,7 +11,7 @@ window.validation = {
       return pattern.test(hastag);
     };
     const checkMacthingHashtags = () => {
-      let hashtagsCopy = hashtags.slice(0);
+      let hashtagsCopy = hashtags.slice();
       let element;
       let checkMacth;
       while (hashtagsCopy.length) {
