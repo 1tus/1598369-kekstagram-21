@@ -73,11 +73,6 @@ window.getFullPicture = (minPictures, picturesObject) => {
   minPictures.addEventListener(`click`, () => {
     openFullPicture(minPictures, picturesObject);
   });
-  minPictures.addEventListener(`keydown`, (evt) => {
-    if (evt.key === `Enter`) {
-      openFullPicture(minPictures, picturesObject);
-    }
-  });
 };
 const closeFullPicture = () => {
   bigPictureContainer.classList.add(`hidden`);

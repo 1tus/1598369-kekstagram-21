@@ -1,6 +1,7 @@
 'use strict';
 
 const MAX_EFFECT_PERCENT = 100;
+const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
 const FILTER_EFFECTS = {
   none: {
     min: 0,
@@ -50,6 +51,7 @@ const closeEditFormBtn = imgFormPreview.querySelector(`.img-upload__cancel`);
 const inputHashtags = imgFormPreview.querySelector(`.text__hashtags`);
 const inputDescription = imgFormPreview.querySelector(`.text__description`);
 const effectsBar = imgFormPreview.querySelector(`.img-upload__effects`);
+const effectPreviews = effectsBar.querySelectorAll(`.effects__preview`);
 const effectInputNone = effectsBar.querySelector(`#effect-none`);
 const zoomDownBtn = imgFormPreview.querySelector(`.scale__control--smaller`);
 const zoomUpBtn = imgFormPreview.querySelector(`.scale__control--bigger`);
@@ -83,7 +85,22 @@ const onZoomUpClick = () => {
     zoomDownBtn.disabled = false;
   }
 };
-
+const insertImagePreview = (file) => {
+  const fileName = file.name.toLowerCase();
+  const isRequiredType = FILE_TYPES.some((fileType) => {
+    return fileName.endsWith(fileType);
+  });
+  if (isRequiredType) {
+    const reader = new FileReader();
+    reader.addEventListener(`load`, () => {
+      imgPreview.src = reader.result;
+      Array.from(effectPreviews).forEach((effectPreview) => {
+        effectPreview.style = `background-image: url(${reader.result})`;
+      });
+    });
+    reader.readAsDataURL(file);
+  }
+};
 const getEffectValue = (effectName, value) => {
   const filterEffect = FILTER_EFFECTS[effectName];
   return filterEffect.min + (filterEffect.max - filterEffect.min) / MAX_EFFECT_PERCENT * value;
@@ -145,7 +162,7 @@ const openEditForm = () => {
   effectsBar.addEventListener(`input`, setTargetEffect);
   inputHashtags.addEventListener(`input`, window.validation.getHastagsValidation);
   inputDescription.addEventListener(`input`, window.validation.getCommentValidation);
-  imgPreview.src = URL.createObjectURL(inputFile.files[0]);
+  insertImagePreview(inputFile.files[0]);
   setZoomStyle(ZOOM.current);
   effectField.style.display = `none`;
   zoomDownBtn.addEventListener(`click`, onZoomDownClick);
