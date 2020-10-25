@@ -52,7 +52,7 @@ const getSocialCommentsByClick = (picturesObject) => {
     }
   });
 };
-const openFullPicture = (minPictures, picturesObject) => {
+const openFullPicture = (picturesObject) => {
   clearCommentField();
   bigPictureContainer.classList.remove(`hidden`);
   body.classList.add(`modal-open`);
@@ -71,7 +71,7 @@ const openFullPicture = (minPictures, picturesObject) => {
 };
 window.getFullPicture = (minPictures, picturesObject) => {
   minPictures.addEventListener(`click`, () => {
-    openFullPicture(minPictures, picturesObject);
+    openFullPicture(picturesObject);
   });
 };
 const closeFullPicture = () => {
