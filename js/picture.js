@@ -15,9 +15,7 @@ const commentTemplate = socialComments.querySelector(`.social__comment`);
 const moreCommentsBtn = bigPictureContainer.querySelector(`.comments-loader`);
 
 const clearCommentField = () => {
-  for (let i = socialCommentsList.length - 1; i >= 0; i--) {
-    socialCommentsList[i].remove();
-  }
+  Array.from(socialCommentsList).forEach((it) => it.remove());
 };
 const renderComment = (comment) => {
   const newCommentElement = commentTemplate.cloneNode(true);
@@ -26,63 +24,68 @@ const renderComment = (comment) => {
   newCommentElement.querySelector(`.social__text`).textContent = comment.message;
   return newCommentElement;
 };
-const getSocialCommentsByClick = (picturesObject) => {
-  let j = SOCIAL_COMMENTS_BY_CLICK;
-  if (socialCommentsList.length > j) {
-    for (let i = j; i < socialCommentsList.length; i++) {
-      socialCommentsList[i].classList.add(`visually-hidden`);
-      moreCommentsBtn.classList.remove(`hidden`);
-      commentsCount.textContent = `${j} из ${picturesObject.comments.length} комментариев`;
-    }
-  } else {
-    commentsCount.textContent = `${picturesObject.comments.length} из ${picturesObject.comments.length} комментариев`;
+let currentCommentsCount;
+const onMoreCommentsBtnClick = () => {
+  const firstCommentHiddenIndex = currentCommentsCount;
+  currentCommentsCount += SOCIAL_COMMENTS_BY_CLICK;
+  if (currentCommentsCount >= socialCommentsList.length) {
+    currentCommentsCount = socialCommentsList.length;
     moreCommentsBtn.classList.add(`hidden`);
   }
-  moreCommentsBtn.addEventListener(`click`, () => {
-    if (j + SOCIAL_COMMENTS_BY_CLICK >= socialCommentsList.length) {
-      j = socialCommentsList.length - SOCIAL_COMMENTS_BY_CLICK;
-      moreCommentsBtn.classList.add(`hidden`);
-    }
-    commentsCount.textContent = `${j + SOCIAL_COMMENTS_BY_CLICK} из ${picturesObject.comments.length} комментариев`;
-    if (socialCommentsList.length > SOCIAL_COMMENTS_BY_CLICK) {
-      for (let i = j; i < j + SOCIAL_COMMENTS_BY_CLICK; i++) {
-        socialCommentsList[i].classList.remove(`visually-hidden`);
-      }
-      j += SOCIAL_COMMENTS_BY_CLICK;
+  Array.from(socialCommentsList).filter((socialComment, i) => {
+    if (i >= firstCommentHiddenIndex && i < currentCommentsCount) {
+      socialComment.classList.remove(`visually-hidden`);
     }
   });
+  commentsCount.textContent = `${currentCommentsCount} из ${socialCommentsList.length} комментариев`;
 };
-const openFullPicture = (picturesObject) => {
-  clearCommentField();
+const getSocialCommentsByClick = () => {
+  if (socialCommentsList.length <= SOCIAL_COMMENTS_BY_CLICK) {
+    moreCommentsBtn.classList.add(`hidden`);
+    commentsCount.textContent = `${socialCommentsList.length} из ${socialCommentsList.length} комментариев`;
+  } else {
+    moreCommentsBtn.classList.remove(`hidden`);
+    commentsCount.textContent = `${SOCIAL_COMMENTS_BY_CLICK} из ${socialCommentsList.length} комментариев`;
+    Array.from(socialCommentsList).filter((socialComment, i) => {
+      if (i >= SOCIAL_COMMENTS_BY_CLICK) {
+        socialComment.classList.add(`visually-hidden`);
+      }
+    });
+    currentCommentsCount = SOCIAL_COMMENTS_BY_CLICK;
+    moreCommentsBtn.addEventListener(`click`, onMoreCommentsBtnClick);
+  }
+};
+
+const openBigPicture = (picturesObject) => {
   bigPictureContainer.classList.remove(`hidden`);
   body.classList.add(`modal-open`);
-  bigPictureCloseBtn.addEventListener(`click`, onCloseFullPicture);
-  document.addEventListener(`keydown`, onCloseFullPictureEsc);
+  bigPictureCloseBtn.addEventListener(`click`, onBigPictureCloseBtnClick);
+  document.addEventListener(`keydown`, onDocumentKeydownEscCloseBigPicture);
   bigPictureImg.src = picturesObject.url;
   likesCount.textContent = picturesObject.likes;
   allCommentsCount.textContent = picturesObject.comments.length;
   pictureDescription.textContent = picturesObject.description;
+  clearCommentField();
   const commentsFragment = document.createDocumentFragment();
-  for (let i = 0; i < picturesObject.comments.length; i++) {
-    commentsFragment.appendChild(renderComment(picturesObject.comments[i]));
-  }
+  picturesObject.comments.forEach((it) => commentsFragment.appendChild(renderComment(it)));
   socialComments.appendChild(commentsFragment);
-  getSocialCommentsByClick(picturesObject);
+  getSocialCommentsByClick();
 };
-window.getFullPicture = (minPictures, picturesObject) => {
+window.getBigPicture = (minPictures, picturesObject) => {
   minPictures.addEventListener(`click`, () => {
-    openFullPicture(picturesObject);
+    openBigPicture(picturesObject);
   });
 };
-const closeFullPicture = () => {
+const closeBigPicture = () => {
   bigPictureContainer.classList.add(`hidden`);
   body.classList.remove(`modal-open`);
-  bigPictureCloseBtn.removeEventListener(`click`, onCloseFullPicture);
-  document.removeEventListener(`keydown`, onCloseFullPictureEsc);
+  bigPictureCloseBtn.removeEventListener(`click`, onBigPictureCloseBtnClick);
+  document.removeEventListener(`keydown`, onDocumentKeydownEscCloseBigPicture);
+  moreCommentsBtn.removeEventListener(`click`, onMoreCommentsBtnClick);
 };
-const onCloseFullPictureEsc = (evt) => {
-  window.util.isEscEvent(evt, closeFullPicture);
+const onDocumentKeydownEscCloseBigPicture = (evt) => {
+  window.util.isEscEvent(evt, closeBigPicture);
 };
-const onCloseFullPicture = () => {
-  closeFullPicture();
+const onBigPictureCloseBtnClick = () => {
+  closeBigPicture();
 };

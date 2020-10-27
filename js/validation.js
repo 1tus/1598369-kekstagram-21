@@ -1,14 +1,15 @@
 'use strict';
 
 const MAX_COMMENT_LENGTH = 140;
+const MAX_HASTAGS_COUNT = 5;
 const inputHashtags = document.querySelector(`.text__hashtags`);
 const inputComment = document.querySelector(`.text__description`);
 const styleInvalid = `border: 4px solid red;`;
 const styleValid = `border: none;`;
 
 window.validation = {
-  getHastagsValidation: () => {
-    const hashtags = inputHashtags.value.split(` `);
+  getHastags: () => {
+    const hashtags = inputHashtags.value.toLowerCase().split(` `).filter((it) => it !== ``);
     const testPattern = (hastag) => {
       const pattern = /^#[А-Яа-яЁёA-Za-z\d]{1,19}$/;
       return pattern.test(hastag);
@@ -26,13 +27,13 @@ window.validation = {
       return checkMacth;
     };
 
-    if (hashtags.length > 5 && hashtags[0] !== ``) {
-      inputHashtags.setCustomValidity(`Максимально допустимо 5 хэштегов`);
+    if (hashtags.length > MAX_HASTAGS_COUNT) {
+      inputHashtags.setCustomValidity(`Максимально допустимо ${MAX_HASTAGS_COUNT} хэштегов`);
       inputHashtags.style = styleInvalid;
-    } else if (!hashtags.every(testPattern) && hashtags[0] !== ``) {
+    } else if (!hashtags.every(testPattern)) {
       inputHashtags.setCustomValidity(`Недопустимый формат хэштега`);
       inputHashtags.style = styleInvalid;
-    } else if (checkMacthingHashtags() && hashtags[0] !== ``) {
+    } else if (checkMacthingHashtags()) {
       inputHashtags.setCustomValidity(`Недопустимы повторы хэштегов`);
       inputHashtags.style = styleInvalid;
     } else {
@@ -42,7 +43,7 @@ window.validation = {
     inputHashtags.reportValidity();
   },
 
-  getCommentValidation: () => {
+  getComment: () => {
     const valueLength = inputComment.value.length;
     if (valueLength > MAX_COMMENT_LENGTH) {
       inputComment.setCustomValidity(`Удалите лишние ${valueLength - MAX_COMMENT_LENGTH} симв.`);

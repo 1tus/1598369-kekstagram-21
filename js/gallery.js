@@ -17,26 +17,18 @@ const renderPicture = (picture) => {
 };
 const render = (pictures) => {
   const displayedPictures = pictureElement.querySelectorAll(`.picture`);
-  for (let i = 0; i < displayedPictures.length; i++) {
-    pictureElement.removeChild(displayedPictures[i]);
-  }
+  Array.from(displayedPictures).forEach((it) => pictureElement.removeChild(it));
   const picturesFragment = document.createDocumentFragment();
-  for (let i = 0; i < pictures.length; i++) {
-    picturesFragment.appendChild(renderPicture(pictures[i]));
-  }
+  pictures.forEach((it) => picturesFragment.appendChild(renderPicture(it)));
   pictureElement.appendChild(picturesFragment);
 };
 const givesPictures = (pictureObjects) => {
   render(pictureObjects);
   const pictures = pictureElement.querySelectorAll(`.picture`);
-  for (let i = 0; i < pictures.length; i++) {
-    window.getFullPicture(pictures[i], pictureObjects[i]);
-  }
+  Array.from(pictures).forEach((it, i) => window.getBigPicture(it, pictureObjects[i]));
 };
 const setFilterBtnClass = (filterBtn) => {
-  for (let filterButton of filterButtons) {
-    filterButton.classList.remove(`img-filters__button--active`);
-  }
+  Array.from(filterButtons).forEach((it) => it.classList.remove(`img-filters__button--active`));
   filterBtn.classList.add(`img-filters__button--active`);
 };
 const updateGallery = window.util.debounce((evt) => {
@@ -49,7 +41,7 @@ const updateGallery = window.util.debounce((evt) => {
       currentPictureObjects = window.filter.getRandomPictureObjects(pictureObjects);
       break;
     case filterDiscussedBtn:
-      currentPictureObjects = window.filter.sortByCommentsPictureObjects(pictureObjects);
+      currentPictureObjects = window.filter.getDiscussedPictureObjects(pictureObjects);
       break;
   }
   givesPictures(currentPictureObjects);

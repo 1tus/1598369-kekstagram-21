@@ -11,24 +11,24 @@ const getMessageForm = (status) => {
   const messageElement = main.querySelector(`.${status}`);
   const closeMessage = () => {
     messageElement.remove();
-    document.removeEventListener(`keydown`, onCloseMessageEsc);
-    closeMessageBtn.removeEventListener(`click`, onCloseMessageBtn);
-    main.removeEventListener(`click`, onCloseMessageClick);
+    document.removeEventListener(`keydown`, onDocumentKeydownEscCloseMessage);
+    closeMessageBtn.removeEventListener(`click`, onCloseMessageBtnClick);
+    main.removeEventListener(`click`, onMainClickCloseMessage);
   };
-  const onCloseMessageEsc = (evt) => {
+  const onDocumentKeydownEscCloseMessage = (evt) => {
     window.util.isEscEvent(evt, closeMessage);
   };
-  const onCloseMessageBtn = () => {
+  const onCloseMessageBtnClick = () => {
     closeMessage();
   };
-  const onCloseMessageClick = (evt) => {
+  const onMainClickCloseMessage = (evt) => {
     if (evt.target === messageElement) {
       closeMessage();
     }
   };
-  closeMessageBtn.addEventListener(`click`, onCloseMessageBtn);
-  document.addEventListener(`keydown`, onCloseMessageEsc);
-  main.addEventListener(`click`, onCloseMessageClick);
+  closeMessageBtn.addEventListener(`click`, onCloseMessageBtnClick);
+  document.addEventListener(`keydown`, onDocumentKeydownEscCloseMessage);
+  main.addEventListener(`click`, onMainClickCloseMessage);
 };
 
 const successHandler = () => {

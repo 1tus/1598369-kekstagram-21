@@ -8,7 +8,7 @@ const effectPinValue = effectField.querySelector(`.effect-level__value`);
 effectPin.addEventListener(`mousedown`, (evt) => {
   const pinLineWidth = effectField.querySelector(`.effect-level__line`).offsetWidth;
   let startCoord = evt.clientX;
-  const onMouseMove = (moveEvt) => {
+  const onDocumentMouseMove = (moveEvt) => {
     const shift = startCoord - moveEvt.clientX;
     startCoord = moveEvt.clientX;
     let currentCoord = effectPin.offsetLeft - shift;
@@ -21,10 +21,10 @@ effectPin.addEventListener(`mousedown`, (evt) => {
     effectLevelDepth.style.width = `${currentCoord}px`;
     effectPinValue.value = Math.round(currentCoord * 100 / pinLineWidth);
   };
-  const onMouseUp = () => {
-    document.removeEventListener(`mousemove`, onMouseMove);
-    document.removeEventListener(`mouseup`, onMouseUp);
+  const onDocumentMouseUp = () => {
+    document.removeEventListener(`mousemove`, onDocumentMouseMove);
+    document.removeEventListener(`mouseup`, onDocumentMouseUp);
   };
-  document.addEventListener(`mousemove`, onMouseMove);
-  document.addEventListener(`mouseup`, onMouseUp);
+  document.addEventListener(`mousemove`, onDocumentMouseMove);
+  document.addEventListener(`mouseup`, onDocumentMouseUp);
 });

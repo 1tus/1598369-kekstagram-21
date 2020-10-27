@@ -14,10 +14,10 @@ const getRandomPictureObjects = (pictureObjects) => {
   }
   return randomPictureObjects;
 };
-const sortByCommentsPictureObjects = (pictureObjects) => {
+const getDiscussedPictureObjects = (pictureObjects) => {
   return pictureObjects.slice().sort((left, right) => right.comments.length - left.comments.length);
 };
 window.filter = {
   getRandomPictureObjects,
-  sortByCommentsPictureObjects
+  getDiscussedPictureObjects
 };

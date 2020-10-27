@@ -6,32 +6,32 @@ const FILTER_EFFECTS = {
   none: {
     min: 0,
     max: 0,
-    getFilterStyle: () => ``
+    getStyle: () => ``
   },
   chrome: {
     min: 0,
     max: 1,
-    getFilterStyle: (value) => `grayscale(${value})`
+    getStyle: (value) => `grayscale(${value})`
   },
   sepia: {
     min: 0,
     max: 1,
-    getFilterStyle: (value) => `sepia(${value})`
+    getStyle: (value) => `sepia(${value})`
   },
   marvin: {
     min: 0,
     max: 100,
-    getFilterStyle: (value) => `invert(${value}%)`
+    getStyle: (value) => `invert(${value}%)`
   },
   phobos: {
     min: 0,
     max: 3,
-    getFilterStyle: (value) => `blur(${value}px)`
+    getStyle: (value) => `blur(${value}px)`
   },
   heat: {
     min: 1,
     max: 3,
-    getFilterStyle: (value) => `brightness(${value})`
+    getStyle: (value) => `brightness(${value})`
   }
 };
 const ZOOM = {
@@ -39,7 +39,7 @@ const ZOOM = {
   max: 100,
   step: 25,
   current: 100,
-  getZoomStyle: (size) => `transform: scale(${size / 100})`
+  getStyle: (size) => `transform: scale(${size / 100})`
 };
 
 const uploadFileField = document.querySelector(`.img-upload__start`);
@@ -63,7 +63,7 @@ const effectLevelDepth = effectField.querySelector(`.effect-level__depth`);
 
 const setZoomStyle = (size) => {
   selectedZoom.value = `${size}%`;
-  imgPreview.style = ZOOM.getZoomStyle(size);
+  imgPreview.style = ZOOM.getStyle(size);
   if (size === ZOOM.max) {
     zoomUpBtn.disabled = true;
   }
@@ -71,14 +71,14 @@ const setZoomStyle = (size) => {
     zoomDownBtn.disabled = true;
   }
 };
-const onZoomDownClick = () => {
+const onZoomDownBtnClick = () => {
   ZOOM.current = ZOOM.current - ZOOM.step;
   setZoomStyle(ZOOM.current);
   if (ZOOM.current < ZOOM.max) {
     zoomUpBtn.disabled = false;
   }
 };
-const onZoomUpClick = () => {
+const onZoomUpBtnClick = () => {
   ZOOM.current = ZOOM.current + ZOOM.step;
   setZoomStyle(ZOOM.current);
   if (ZOOM.current > ZOOM.min) {
@@ -94,8 +94,8 @@ const insertImagePreview = (file) => {
     const reader = new FileReader();
     reader.addEventListener(`load`, () => {
       imgPreview.src = reader.result;
-      Array.from(effectPreviews).forEach((effectPreview) => {
-        effectPreview.style = `background-image: url(${reader.result})`;
+      Array.from(effectPreviews).forEach((it) => {
+        it.style = `background-image: url(${reader.result})`;
       });
     });
     reader.readAsDataURL(file);
@@ -107,7 +107,7 @@ const getEffectValue = (effectName, value) => {
 };
 const setFilterEffect = (effectName) => {
   const effectValue = getEffectValue(effectName, effectPinValue.value);
-  imgPreview.style.filter = FILTER_EFFECTS[effectName].getFilterStyle(effectValue);
+  imgPreview.style.filter = FILTER_EFFECTS[effectName].getStyle(effectValue);
 };
 
 let filterClass;
@@ -123,20 +123,20 @@ let currentEffect;
 const setTargetEffect = (evt) => {
   setFilterClass(evt.target.value);
   currentEffect = evt.target.value;
-  effectPin.style.left = `100%`;
-  effectLevelDepth.style.width = `100%`;
+  effectPin.style.left = `${MAX_EFFECT_PERCENT}%`;
+  effectLevelDepth.style.width = `${MAX_EFFECT_PERCENT}%`;
   if (imgPreview.classList.contains(`effects__preview--none`)) {
     effectField.style.display = `none`;
     effectPinValue.value = ``;
   } else {
     effectField.style.display = `block`;
-    effectPinValue.value = `100`;
+    effectPinValue.value = MAX_EFFECT_PERCENT;
   }
-  imgPreview.style.filter = FILTER_EFFECTS[currentEffect].getFilterStyle(FILTER_EFFECTS[currentEffect].max);
-  effectPin.addEventListener(`mouseup`, onEffectPinUp);
+  imgPreview.style.filter = FILTER_EFFECTS[currentEffect].getStyle(FILTER_EFFECTS[currentEffect].max);
+  effectPin.addEventListener(`mouseup`, onEffectPinMouseUp);
   return currentEffect;
 };
-const onEffectPinUp = () => {
+const onEffectPinMouseUp = () => {
   setFilterEffect(currentEffect);
 };
 
@@ -150,47 +150,43 @@ const resetEditForm = () => {
   effectPinValue.value = ``;
   ZOOM.current = ZOOM.max;
   zoomDownBtn.disabled = false;
+  imgPreview.src = `#`;
 };
-const onOpenEditForm = () => {
-  openEditForm();
-};
-const openEditForm = () => {
+const onUploadFileFieldChange = () => {
   imgFormPreview.classList.remove(`hidden`);
   document.querySelector(`body`).classList.add(`modal-open`);
-  closeEditFormBtn.addEventListener(`click`, onCloseEditForm);
-  document.addEventListener(`keydown`, onCloseEditFormEsc);
+  closeEditFormBtn.addEventListener(`click`, onCloseEditFormBtnClick);
+  document.addEventListener(`keydown`, onDocumentKeydownEscCloseEditForm);
   effectsBar.addEventListener(`input`, setTargetEffect);
-  inputHashtags.addEventListener(`input`, window.validation.getHastagsValidation);
-  inputDescription.addEventListener(`input`, window.validation.getCommentValidation);
+  inputHashtags.addEventListener(`input`, window.validation.getHastags);
+  inputDescription.addEventListener(`input`, window.validation.getComment);
   insertImagePreview(inputFile.files[0]);
   setZoomStyle(ZOOM.current);
   effectField.style.display = `none`;
-  zoomDownBtn.addEventListener(`click`, onZoomDownClick);
-  zoomUpBtn.addEventListener(`click`, onZoomUpClick);
+  zoomDownBtn.addEventListener(`click`, onZoomDownBtnClick);
+  zoomUpBtn.addEventListener(`click`, onZoomUpBtnClick);
   imgForm.addEventListener(`submit`, window.submitHandler);
 };
 
-uploadFileField.addEventListener(`change`, onOpenEditForm);
+uploadFileField.addEventListener(`change`, onUploadFileFieldChange);
 
-const onCloseEditForm = () => {
-  window.closeEditForm();
-};
-window.closeEditForm = () => {
+const onCloseEditFormBtnClick = () => {
   imgFormPreview.classList.add(`hidden`);
   document.querySelector(`body`).classList.remove(`modal-open`);
   resetEditForm();
-  closeEditFormBtn.removeEventListener(`click`, onCloseEditForm);
-  document.removeEventListener(`keydown`, onCloseEditFormEsc);
+  closeEditFormBtn.removeEventListener(`click`, onCloseEditFormBtnClick);
+  document.removeEventListener(`keydown`, onDocumentKeydownEscCloseEditForm);
   effectsBar.removeEventListener(`input`, setTargetEffect);
-  effectPin.removeEventListener(`mouseup`, onEffectPinUp);
-  inputHashtags.removeEventListener(`input`, window.validation.getHastagsValidation);
-  inputDescription.removeEventListener(`input`, window.validation.getCommentValidation);
-  zoomDownBtn.removeEventListener(`click`, onZoomDownClick);
-  zoomUpBtn.removeEventListener(`click`, onZoomUpClick);
+  effectPin.removeEventListener(`mouseup`, onEffectPinMouseUp);
+  inputHashtags.removeEventListener(`input`, window.validation.getHastags);
+  inputDescription.removeEventListener(`input`, window.validation.getComment);
+  zoomDownBtn.removeEventListener(`click`, onZoomDownBtnClick);
+  zoomUpBtn.removeEventListener(`click`, onZoomUpBtnClick);
   imgForm.removeEventListener(`submit`, window.submitHandler);
 };
+window.closeEditForm = onCloseEditFormBtnClick;
 
-const onCloseEditFormEsc = (evt) => {
+const onDocumentKeydownEscCloseEditForm = (evt) => {
   if (document.activeElement !== inputHashtags && document.activeElement !== inputDescription) {
     window.util.isEscEvent(evt, window.closeEditForm);
   }
